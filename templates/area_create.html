@@ -1,0 +1,61 @@
+
+{% extends 'master.html' %}
+
+{% block body %}
+	
+		<div class="container">
+			<div id="area-register-form" class="panel panel-default">
+				<div class="panel-heading">
+					<h2>Crear nueva área</h2>
+				</div>
+
+				<div class="container-form-register panel-body">
+					<br>
+					<form data-toggle="validator" id="form-area-register" class="form-horizontal" role="form">
+						<!--<div id="punto-id" class="hidden"></div>-->
+						<div class="form-group">
+							<label class="col-sm-3 control-label" for="name">Nombre*</label>
+							<div class="col-sm-5">
+								<input class="form-control" placeholder="Nombre del área de la casa" type="text" id="txt-area-name-form" name="name" required data-error="Definir el nombre del área.">
+								<span class="help-block with-errors"></span>
+							</div>
+						</div>
+
+						<!-- <div class="form-group">
+							<label class="col-sm-3 control-label" for="appliance_quantity">Cantidad de dispositivos*</label>
+							<div class="col-sm-3">
+								<input class="form-control" placeholder="Cantidad de dispositivos" type="number" id="txt-area-quantity-form" name="quantity" required data-error="Definir cantidad." value=1>
+								<span class="help-block with-errors"></span>
+							</div>
+						</div> -->
+
+						<div class="form-group">
+							<label class="col-xs-3 control-label" for="status">Estado*</label>
+							<div class="col-xs-2 checkbox">
+								<label>
+									<input class="" type="radio" id="txt-area-status-activo-form" name="area-status-radio" value=1 checked>
+									<span>Activo</span>
+								</label>
+							</div>
+							<div class="col-xs-2 checkbox">
+								<label>
+									<input class="" type="radio" id="txt-area-status-inactive-form" name="area-status-radio" value=0>
+									<span>Inactivo</span>
+								</label>
+							</div>
+						</div>
+
+						<div id="btn-save-area-form" class="form-group text-right">
+							<div id ="btn-group-new-area" class="col-sm-8">
+								<a id="save-form-area" class="btn btn-primary" href="#" role="button"><i class="fa fa-save"></i> Guardar</a>
+								<a id="exit-form-area" class="btn btn-default" href="/area_index" role="button">Salir</a>
+							</div>
+						</div>
+						<hr>
+						<h4>Los campos con * son obligatorios</h4>
+					</form>
+				</div>
+			</div>
+		</div>
+   
+{% endblock %}

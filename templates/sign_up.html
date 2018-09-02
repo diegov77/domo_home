@@ -1,0 +1,139 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	    <title>Domotica - Smart Home</title>
+	    <meta name="description" content="">
+		<meta name="author" content="Domotica Tesis">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	    <link rel="stylesheet" href="static/css/bootstrap.min.css">
+	    <link rel="stylesheet" href="static/css/style.css">
+	    <style>
+	        body {
+	            padding-top: 50px;
+	            padding-bottom: 20px;
+	        }
+	    </style>
+	    link rel="stylesheet" href="css/bootstrap-theme.min.css"
+
+	    script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script
+	</head> -->
+{% extends 'master.html' %}
+
+{% block body %}
+	
+		<div class="container">
+			<div id="user-register-form" class="panel panel-default">
+				<div class="panel-heading">
+					<h2>Crear usuario</h2>
+				</div>
+
+				<div class="container-form-register panel-body">
+					<br>
+					<form data-toggle="validator" id="form-new-user" class="form-horizontal" role="form" method="POST">
+						<!--<div id="punto-id" class="hidden"></div>-->						
+						<div class="form-group">
+							<label class="col-sm-3 control-label" for="name">Nombre*</label>
+							<div class="col-sm-5">
+								<input class="form-control" placeholder="Nombre" type="text" id="txt-name-form" name="name" required data-error="Definir el nombre.">
+								<span class="help-block with-errors"></span>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label" for="last-name">Apellido*</label>
+							<div class="col-sm-5">
+								<input class="form-control" placeholder="Apellido" type="text" id="txt-last-name-form" name="last-name" required data-error="Definir el apellido.">
+								<span class="help-block with-errors"></span>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label" for="user">Usuario*</label>
+							<div class="col-sm-5">
+								<input class="form-control" placeholder="Usuario" type="text" id="txt-user-form" name="user" required data-error="Definir el usuario.">
+								<span class="help-block with-errors"></span>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label" for="pass">Contraseña<span>*</span></label>
+							<div class="col-sm-5">
+								<input class="form-control" placeholder="Contraseña" type="password" id="txt-pass-form" name="password" required data-error="Definir la contraseña.">
+								<span class="help-block with-errors"></span>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label" for="phone">Teléfono</label>
+							<div class="col-sm-5">
+								<input class="form-control" placeholder="Debe ser un nro de celular válido" type="text" id="txt-phone-form" name="phone">
+								<span class="help-block with-errors"></span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label" for="email">Correo</label>
+							<div class="col-sm-5">
+								<input class="form-control" placeholder="Correo" type="text" id="txt-email-form" name="email">
+								<span class="help-block with-errors"></span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label" for="birth-date">Fecha de nacimiento</label>
+							<div class="col-sm-5">
+								<input class="form-control date-picker" placeholder="YYYY-MM-DD" type="text" id="txt-birth-date-form" name="birthdate">
+								<span class="help-block with-errors"></span>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label" for="user-role">Rol de usuario</label>
+							<div class="col-sm-5">
+								<select class="form-control" id="txt-role-user-form" name="user-role">
+									<option value="0">Seleccione un rol...</option>
+								    <option value="1">Admin</option>
+								    <option value="2">Familia</option>
+								    <option value="3">Invitados</option>
+								 </select>
+								<span class="help-block with-errors"></span>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-xs-3 control-label" for="status">Estado*</label>
+							<div class="col-xs-2 radio">
+								<label>
+									<input class="" type="radio" id="txt-status-user-activo-form" name="user-active-radio" value=1 checked>
+									<span>Activo</span>
+								</label>
+							</div>
+							<div class="col-xs-2 radio">
+								<label>
+									<input class="" type="radio" id="txt-status-user-inactive-form" name="user-active-radio" value=0>
+									<span>Inactivo</span>
+								</label>
+							</div>
+						</div>
+
+						<div id="btn-save-user-form" class="form-group text-right">
+							<div id ="btn-group-new-user" class="col-sm-8">
+								<a id="save-form-user" class="btn btn-primary" href="#" role="button"><i class="fa fa-save"></i> Guardar</a>
+								<a id="exit-form-user" class="btn btn-primary" href="/user_index" role="button">Salir</a>
+							</div>
+						</div>
+						<hr>
+						<h4>Los campos con * son obligatorios</h4>
+						<br>
+						<div class="alert alert-danger alert-dismissable fade in hidden">
+					  		<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+					  		<span class="respuesta-error"></span>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+   
+{% endblock %}
+<!-- </html> -->

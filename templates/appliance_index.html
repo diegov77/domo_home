@@ -1,0 +1,65 @@
+{% extends 'master.html' %}
+
+{% block body %}
+
+	<div class="container">
+		<div id="appliance-index" class="page">   	
+			{% if session['userRole'] == 'A' %}
+			<div id="btn-group-create-appliance" class="botonera">
+				<div class="row">
+					<div class="col-xs-12">
+						<a id="btn-create-appliance" class="btn btn-default" href="/appliance_create" role="button"><i class="fa fa-plus-circle"></i> Agregar nuevo dispositivo</a>
+						<!--<a id="edit-user-imprenta" class="btn btn-primary disabled" href="#" role="button"><i class="fa fa-edit"></i> Editar</a>
+						<a id="delete-user-imprenta" class="btn btn-danger disabled" href="#" role="button"><i class="fa fa-trash-o"></i> Eliminar</a>-->
+					</div>
+				</div>
+			</div>
+			{% endif %}
+			<div id="areas-list">
+				<h2>Lista de dispositivos</h2>
+				<table class="table table-hover dataTable">
+				    <thead class="thead">
+				      <tr>
+				        <!--<th></th>-->
+				        <th>Nombre</th>
+				        <th>Potencia</th>
+				        <th>Tarifa</th>
+				        <th>Tipo</th>
+				        <th>Sensor</th>
+				        <th>Área</th>
+				        <th>Descripción</th>
+				        <th>Activo</th>
+				        {% if session['userRole'] == 'A' %}
+				        <th></th>
+				        {% endif %}
+				      </tr>
+				    </thead>
+				    <tbody id="appliance-list-created">
+				    	{% for appliance in appliances %}
+						    <tr class="appliance">
+						    	<td class="appliance-name">{{appliance.name}}</td>
+						    	<td class="appliance-power">{{appliance.power}}</td>
+						    	<td class="appliance-fee">{{appliance.fee}}</td>
+						    	<td class="appliance-type">{{appliance.type}}</td>
+						    	<td class="appliance-area">{{appliance.sensor}}</td>
+						    	<td class="appliance-area">{{appliance.area}}</td>
+						    	<td class="appliance-description">{{appliance.description}}</td>					    
+						    	{% if appliance.status == 1 %}
+								    <td class="appliance-status">Si</td>
+								{% else %}
+								    <td class="appliance-status">No</td>
+								{% endif %}
+								{% if session['userRole'] == 'A' %}
+								<td><a id="btn-edit-appliance{{appliance.id}}" class="btn btn-warning btn-edit-appliance" href="/appliance_edit?applianceId={{appliance.id}}" role="button">Editar</a></td>
+								{% endif %}
+						    </tr>
+						{% endfor %}
+				    </tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+
+
+{% endblock %}

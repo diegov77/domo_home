@@ -1,0 +1,57 @@
+{% extends 'master.html' %}
+
+{% block body %}
+
+	<div class="container">
+		<div id="area-index" class="page">   	
+			{% if session['userRole'] == 'A' %}
+			<div id="btn-group-create-area" class="botonera">
+				<div class="row">
+					<div class="col-xs-12">
+						<a id="btn-create-area" class="btn btn-default" href="/area_create" role="button"><i class="fa fa-plus-circle"></i> Crear nueva área</a>
+						<!--<a id="edit-user-imprenta" class="btn btn-primary disabled" href="#" role="button"><i class="fa fa-edit"></i> Editar</a>
+						<a id="delete-user-imprenta" class="btn btn-danger disabled" href="#" role="button"><i class="fa fa-trash-o"></i> Eliminar</a>-->
+					</div>
+				</div>
+			</div>
+			{% endif %}
+			<div id="areas-list">
+				<h2>Lista de áreas</h2>
+				<table class="table table-hover dataTable">
+				    <thead class="thead">
+				      <tr>
+				        <!--<th></th>-->
+				        <th>Nombre</th>
+				        <th>Cantidad dispositivos</th>
+				        <th>Fecha creación</th>
+				        <th>Activo</th>
+				        {% if session['userRole'] == 'A' %}
+				        <th></th>
+				        {% endif %}
+				      </tr>
+				    </thead>
+				    <tbody id="areas-list-created">
+				    	{% for area in areas %}
+						    <tr class="area">
+						    	<td class="area-name">{{area.name}}</td>
+						    	<td class="area-quantiy">{{area.quantity}}</td>
+						    	<td class="area-creation">{{area.creation_date}}</td>
+						    	{% if area.status == 1 %}
+								    <td class="area-status">Si</td>
+								{% else %}
+								    <td class="area-status">No</td>
+								{% endif %}
+								{% if session['userRole'] == 'A' %}
+								<td><a id="btn-edit-area{{area.id}}" class="btn btn-warning btn-edit-area" href="/area_edit?areaId={{area.id}}" role="button">Editar</a></td>
+								{% endif %}
+						    </tr>
+						{% endfor %}
+				    </tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+
+
+{% endblock %}

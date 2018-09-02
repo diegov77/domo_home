@@ -1,0 +1,60 @@
+{% extends 'master.html' %}
+
+{% block body %}
+	
+		<div class="container">
+			<div id="area-edit-form" class="panel panel-default">
+				<div class="panel-heading">
+					<h2>Editar área</h2>
+				</div>
+
+				<div class="container-form-register panel-body">
+					<br>
+					<form data-toggle="validator" id="form-edit-area" class="form-horizontal" role="form" method="POST" >
+						<input id="id-edit-area-form" type="hidden" class="" name="area-id" value={{area.id}} data-id="{{area.id}}">
+						<div class="form-group">
+							<label class="col-sm-3 control-label" for="name">Nombre*</label>
+							<div class="col-sm-5">
+								<input class="form-control" placeholder="Nombre" type="text" id="txt-area-name-form" name="name" required data-error="Definir el nombre." value="{{area.name}}">
+								<span class="help-block with-errors"></span>
+							</div>
+						</div>
+
+						<!-- <div class="form-group">
+							<label class="col-sm-3 control-label" for="last-name">Cantidad dispositivo*</label>
+							<div class="col-sm-5">
+								<input class="form-control" placeholder="Apellido" type="text" id="txt-area-quantity-form" name="quantity" required data-error="Definir el apellido." value="{{area.quantity}}">
+								<span class="help-block with-errors"></span>
+							</div>
+						</div> -->
+
+						<div class="form-group">
+							<label class="col-xs-3 control-label" for="status">Estado*</label>
+							<div class="col-xs-2 radio">
+								<label>
+									<input class="" type="radio" id="txt-area-status-activo-form" name="area-active-radio" value=1 {{ "checked" if area.status==1 }}>
+									<span>Activo</span>
+								</label>
+							</div>
+							<div class="col-xs-2 radio">
+								<label>
+									<input class="" type="radio" id="txt-area-status-inactive-form" name="area-active-radio" value=0 {{ "checked" if area.status==0 }}>
+									<span>Inactivo</span>
+								</label>
+							</div>
+						</div>
+
+						<div id="botonera-form-area-edit" class="form-group text-right">
+							<div id="btn-group-edit-area" class="col-sm-8">
+								<a id="btn-save-area-edit" class="btn btn-primary" href="#" role="button"><i class="fa fa-save"></i> Guardar</a>
+								<a id="btn-exit-area-edit" class="btn btn-default" href="/area_index" role="button">Salir</a>
+							</div>
+						</div>
+						<hr>
+						<h4>Los campos con * son obligatorios</h4>
+					</form>
+				</div>
+			</div>
+		</div>
+  
+{% endblock %}

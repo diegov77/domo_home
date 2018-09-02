@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fhacktions Map</title>
+<meta charset="UTF-8">
+<meta name="description" content="Fhacktions is a mobile MOBA integrated with geolocalization">
+<meta name="keywords" content="fhacktions,Geo-Scanner,Game,Map Fhacktions,Geo Scanner,MOBA,geolocalization">
+<meta name="author" content="Posibillian Tech">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google" value="notranslate">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="stylesheet" href="/static/css/leaflet.css" />
+<script src="/static/js/leaflet.js"></script>
+<link rel="icon" href="static/css/images/icon.jpeg">
+
+
+<!--<script src="/static/js/spin.js"></script>-->
+<script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+<!--<script src="static/js/jquery.js"></script>-->
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width"/>
+    
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.37.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.37.0/mapbox-gl.css' rel='stylesheet' />
+
+    <!--WEB SOCKET 
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>-->
+    <!--CLUSTERING-->
+    <link rel="stylesheet" href="/static/css/MarkerCluster.css" />
+    <link rel="stylesheet" href="/static/css/MarkerCluster.Default.css" />
+    <script type="text/javascript" src=/static/js/leaflet.markercluster.js></script>
+    <!--GROUP LAYERS -->
+     <script src="static/js/leaflet.groupedlayercontrol.js"></script>
+<!-- SITE BAR-->
+
+   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/leaflet-sidebar.css" />
+
+     <script type="text/javascript" src="/static/js/leaflet-sidebar.js"></script>
+
+<!-- Prune -->
+        <script src="static/js/PruneCluster.js"></script>
+
+    <link rel="stylesheet" href="static/css/pruneStyle.css"/>
+
+    <!-- Toolbar-->
+     <script src="static/js/leaflet.toolbar.js"></script>
+<link rel="stylesheet" href="static/css/leaflet.toolbar.css"/>
+<script src="static/js/leaflet.draw.js"></script>
+ <link rel="stylesheet" href="static/css/leaflet.draw.css"/>
+ <!-- Bootstrap
+  <script src="static/js/bootstrap.min.js"></script>
+ <link rel="stylesheet" href="static/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="static/css/bootstrap-theme.min.css"/>-->
+  <!-- Easy button-->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-easybutton@2.0.0/src/easy-button.css">
+<script src="https://unpkg.com/leaflet-easybutton@2.0.0/src/easy-button.js"></script>
+<!-- TAG LIST BUTTON-->
+<link rel="stylesheet" href="static/css/leaflet-tag-filter-button.css" />
+<script src="static/js/leaflet-tag-filter-button.js"></script>
+<!-- CURRENT POSITION -->
+<link rel="stylesheet" href="static/css/L.Control.Locate.min.css" />
+<script src="static/js/L.Control.Locate.min.js" charset="utf-8"></script>
+<!-- Paint-->
+<script src="static/js/MapPaint.js"></script>
+<link rel="stylesheet" href="static/css/MapPaint.css" type="text/css" />
+ <!--<script src="static/js/MapPaint.js?q={{time.time()}}"></script>
+<link rel="stylesheet" href="static/css/MapPaint.css?q={{time.time()}}" type="text/css" />-->
+
+<!--<script src="http://cdn.jquerytools.org/1.2.6/full/jquery.tools.min.js"></script>-->
+<!-- Spinner-->
+  <script src="static/js/spin.min.js" charset="utf-8"></script>
+  <script src="/static/js/leaflet.spin.min.js" charset="utf-8"></script>
+  <script src="/static/js/jsonh.js"></script>
+  <!-- MAP CSS-->
+<link rel="stylesheet" href="static/css/map.css" />
+</head>
+
+
+<body id="body">
+  
+
+
+    <div id="map" class="sidebar-map"></div>
+
+<div id="icon"> 
+<img src="static/css/images/logo.png" alt="Logo" ">
+</div>ResultIter
+
+<div id='map'>
+
+    
+</div>
+   
+
+<script type="text/javascript"  charset="utf-8">
+ var map;
+   
+
+  
+  var api_path="/api/v1";
+//var HOST = "http://192.168.56.1:5000"+api_path;
+
+//var HOST = "http://localhost:5000"+api_path;
+var HOST = "https://map.fhacktions.com"+api_path;
+
+var pruneCluster_hacked = new PruneClusterForLeaflet();
+var Fhacktion_list = []; 
+
+var pruneCluster_premium = new PruneClusterForLeaflet();
+var premium_list= [];
+
+var pruneCluster_free = new PruneClusterForLeaflet();
+var free_list= [];
+
+var pruneCluster_All = new PruneClusterForLeaflet();
+var Fhacktion_list_All = []; 
+
+var  Cluster_premium_no_hacked = new PruneClusterForLeaflet();
+
+var Cluster_serversNoHacked = new PruneClusterForLeaflet();
+
+var cluster_userCreated = new PruneClusterForLeaflet();
+
+var cluster_userNoCreated = new PruneClusterForLeaflet();
+//SERVER GROUP
+var cluster_basic = new PruneClusterForLeaflet();
+var cluster_small = new PruneClusterForLeaflet();
+var cluster_medium = new PruneClusterForLeaflet();
+var cluster_full = new PruneClusterForLeaflet();
+
+var default_point = new L.LatLng(-33.5192755 , -70.6836865 , true);
+    
+
+
+
+/*
+   var mapbox = L.tileLayer('https://api.mapbox.com/styles/v1/posibillian/cj3fdxbqv00052smh87qm548r/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoicG9zaWJpbGxpYW4iLCJhIjoiY2ozZXZnc2E1MDBydTJ3cWx3eXdyZDV3cCJ9.cvErKt0_vA1Oa7sm1iICwg', {
+    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+    maxZoom: 18,
+    minZoom: 2,
+    id: 'cj3fdxbqv00052smh87qm548r',
+    accessToken: 'pk.eyJ1IjoicG9zaWJpbGxpYW4iLCJhIjoiY2ozZXZnc2E1MDBydTJ3cWx3eXdyZDV3cCJ9.cvErKt0_vA1Oa7sm1iICwg'
+});*/
+
+  var mapbox =  L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', {
+        maxZoom: 19, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy;<a href="https://carto.com/attribution">CARTO</a>'
+      });
+
+
+var cartoLight = L.tileLayer("https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png", {
+  maxZoom: 19,
+  minZoom: 2,
+  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://cartodb.com/attributions">CartoDB</a>'
+});
+
+
+//var marker = L.marker([51.5, -0.09]).addTo(map);
+    var c = 1;
+    var server_size = 1000;
+    var data_free;
+
+    //CLUSTERING
+    var cluster_free = L.markerClusterGroup({
+    spiderfyOnMaxZoom: true,
+    showCoverageOnHover: true,
+    zoomToBoundsOnClick: true,
+    removeOutsideVisibleBounds:true,
+    chunkedLoading: true
+});
+
+    var cluster_premium = L.markerClusterGroup({
+    spiderfyOnMaxZoom: true,
+    showCoverageOnHover: true,
+    zoomToBoundsOnClick: true,
+    removeOutsideVisibleBounds:true,
+    chunkedLoading: true
+});
+
+    var premium_no_hacked = L.markerClusterGroup({
+    spiderfyOnMaxZoom: true,
+    showCoverageOnHover: true,
+    zoomToBoundsOnClick: true,
+    removeOutsideVisibleBounds:true,
+    chunkedLoading: true
+});
+
+   var all_hacked  = L.markerClusterGroup({
+    spiderfyOnMaxZoom: true,
+    showCoverageOnHover: true,
+    zoomToBoundsOnClick: true,
+    removeOutsideVisibleBounds:true,
+    chunkedLoading: true
+});
+  var free_no_hacked = L.markerClusterGroup({
+    spiderfyOnMaxZoom: true,
+    showCoverageOnHover: true,
+    zoomToBoundsOnClick: true,
+    removeOutsideVisibleBounds:true,
+    chunkedLoading: true
+});
+
+  var group_all = L.markerClusterGroup({
+    spiderfyOnMaxZoom: true,
+    showCoverageOnHover: true,
+    zoomToBoundsOnClick: true,
+    removeOutsideVisibleBounds:true,
+    chunkedLoading: true
+});
+
+  var group_user_created = L.markerClusterGroup({
+    spiderfyOnMaxZoom: true,
+    showCoverageOnHover: true,
+    zoomToBoundsOnClick: true,
+    removeOutsideVisibleBounds:true,
+    chunkedLoading: true
+});
+ var group_user_no_created = L.markerClusterGroup({
+    spiderfyOnMaxZoom: true,
+    showCoverageOnHover: true,
+    zoomToBoundsOnClick: true,
+    removeOutsideVisibleBounds:true,
+    chunkedLoading: true
+});
+
+//SERVER GROUP
+ var group_basic = L.markerClusterGroup({
+    spiderfyOnMaxZoom: true,
+    showCoverageOnHover: true,
+    zoomToBoundsOnClick: true,
+    removeOutsideVisibleBounds:true,
+    chunkedLoading: true
+});
+ var group_medium = L.markerClusterGroup({
+    spiderfyOnMaxZoom: true,
+    showCoverageOnHover: true,
+    zoomToBoundsOnClick: true,
+    removeOutsideVisibleBounds:true,
+    chunkedLoading: true
+});
+ var group_full = L.markerClusterGroup({
+    spiderfyOnMaxZoom: true,
+    showCoverageOnHover: true,
+    zoomToBoundsOnClick: true,
+    removeOutsideVisibleBounds:true,
+    chunkedLoading: true
+});
+ var group_small = L.markerClusterGroup({
+    spiderfyOnMaxZoom: true,
+    showCoverageOnHover: true,
+    zoomToBoundsOnClick: true,
+    removeOutsideVisibleBounds:true,
+    chunkedLoading: true
+});
+
+
+
+  var group_premium = new L.LayerGroup();
+  var group__free_servers = new L.LayerGroup();
+  
+
+    
+   /* {% for server in servers: %}
+      
+
+        var point = new L.LatLng({{server.lat}} ,{{server.lon}}, true);
+        var server_marker = L.marker(point, { tags: ['{{server.facc_nombre}}'] });//.addTo(map);
+
+        
+        var premium = "{{server.serv_premium}}";
+            
+        
+        if(premium=="True"){
+      
+        server_marker.bindPopup("<b>Server name: </b>{{server.server_name}}<br><b>User:</b> {{server.usua_usuario}}<br><b>Fhacktion: </b> {{server.facc_nombre}}<br><b> Server type: </b> Premium ").openPopup();//.addTo(group_premium);
+               
+                
+    }else{
+       
+        server_marker.bindPopup("<b>Server name: </b>{{server.server_name}}<br><b>User:</b> {{server.usua_usuario}}<br><b>Fhacktion: </b> {{server.facc_nombre}}<br><b>Server type: </b> Free").openPopup();//.addTo(group__free_servers);
+    }
+         if (server_size == c ) {
+                
+                
+            }
+            
+        c++
+    {% endfor %}*/
+
+
+
+
+ map = L.map('map', {
+    center: default_point,
+    zoom: 2,
+    detectRetina: true,
+    reuseTiles: true,
+    layers: [mapbox, all_hacked]
+});
+
+
+ map.spin(true,{color: "#fff"});
+
+
+//map.addLayer(cluster);
+
+var baseLayers = {
+    "Filter": mapbox
+       // "White Hat": cartoLight
+};
+
+// Overlay layers are grouped
+var groupedOverlays = {
+    "Servers Hacked": {
+        "All Hacked": all_hacked,
+        "Premium": cluster_premium,
+        "Normal": cluster_free,
+        "Premium Unhacked": premium_no_hacked,
+        "Normal Unhacked": free_no_hacked,
+        
+      
+    }
+};
+
+//cluster.addTo(map);
+
+
+var options = {
+  // Make the "Landmarks" group exclusive (use radio inputs)
+  exclusiveGroups: ["Servers Hacked"],
+  // Show a checkbox next to non-exclusive group labels for toggling all
+  groupCheckboxes: true
+};
+// Use the custom grouped layer control, not "L.control.layers"
+var layerControl = L.control.groupedLayers(baseLayers, groupedOverlays,options).addTo(map);
+
+//SITEBAR
+ //var sidebar = L.control.sidebar('sidebar').addTo(map);
+
+
+
+//TOOLBAR
+drawnItems = new L.FeatureGroup().addTo(map);
+   new L.DrawToolbar.Control({
+            position: 'topleft',
+            className: 'leaflet-draw-toolbar'
+        }).addTo(map);
+
+        new L.EditToolbar.Control({
+            position: 'topleft',
+            className: 'leaflet-draw-toolbar'
+        }).addTo(map, drawnItems);
+
+        map.on('draw:created', function(evt) {
+            var type = evt.layerType,
+                layer = evt.layer;
+
+            drawnItems.addLayer(layer);
+        });
+
+
+
+
+map.on("overlayadd", function(layer) {
+
+
+if(layer.name=='Premium'){
+      
+ //destroy( tagf) s
+$('.ripple').click();
+
+ 
+
+
+L.Control.TagFilterButton.prototype._invisibles = [];
+L.Control.TagFilterButton.prototype._selectedTags = [];
+
+
+
+$('.easy-button-container').remove();
+if(pruneCluster_premium!=null){
+      // console.log('premium removed');
+ cluster_premium.removeLayer(pruneCluster_premium);
+}
+addPruneDataPremium();
+        
+}
+if(layer.name=='All Hacked'){
+
+
+     $('.ripple').click();
+    L.Control.TagFilterButton.prototype._invisibles = [];
+    L.Control.TagFilterButton.prototype._selectedTags = [];
+   $('.easy-button-container').remove();
+   
+    if(pruneCluster_hacked!=null){
+       // console.log('All Hacked removed');
+ all_hacked.removeLayer(pruneCluster_hacked);
+}
+
+
+
+addPruneDataHacked();
+
+
+}
+
+if(layer.name=='Normal'){
+L.Control.TagFilterButton.prototype._invisibles = [];
+L.Control.TagFilterButton.prototype._selectedTags = [];
+
+
+
+$('.easy-button-container').remove();
+  if(pruneCluster_free!=null){
+       //  console.log('free removed');
+ cluster_free.removeLayer(pruneCluster_free);
+}
+        addPruneDataFree();
+
+    }
+
+if(layer.name=='Premium Unhacked'){
+$('.easy-button-container').remove();
+
+//document.getElementsByName('leaflet-exclusive-group-layer-1').checked = false;
+//unCheckRadioButton("leaflet-exclusive-group-layer-1");
+ 
+
+}
+
+if(layer.name=='Normal Unhacked'){
+$('.easy-button-container').remove();
+}
+
+if(layer.name=='Both'){
+$('.easy-button-container').remove();
+if(pruneCluster_All!=null){
+group_all.removeLayer(pruneCluster_All);
+}
+ addPruneDataAll();
+}
+
+
+if(layer.name=='Yes'){
+$('.easy-button-container').remove();
+if(cluster_userCreated!=null){
+group_user_created.removeLayer(cluster_userCreated);
+}
+ addPruneDataUser();
+}
+
+if(layer.name=='No'){
+$('.easy-button-container').remove();
+if(cluster_userNoCreated!=null){
+group_user_no_created.removeLayer(cluster_userNoCreated);
+}
+ addPruneDataNoUsers();
+}
+if(layer.name=='Basic' || layer.name=='Medium' || layer.name=='Full' || layer.name=='Small'){
+$('.easy-button-container').remove();
+
+}
+
+
+
+});
+
+map.on('overlayaddchange', function(layer) { 
+
+
+$('.ripple').click();
+
+});
+
+map.on('baselayerchange', function(layer) { 
+
+
+});
+map.on("overlayremove", function(e) {
+
+});
+
+
+
+var prune_data;
+
+ $(document).ready(function () {
+
+ 
+//SERVER HACKED LIST
+   $.ajax({
+    url : HOST+'/serversHacked',
+    dataType : 'json'
+})
+.done(function(data) {
+  prune_data= data;
+    
+map.spin(false);
+     
+ addPruneDataHacked();
+
+});
+//PREMIUM NO HACKED
+  $.ajax({
+    url : HOST+'/premiumUnhacked',
+    dataType : 'json'
+})
+.done(function(data) {
+  
+    
+     var fhacktion;
+           var server_type="Premium";
+   
+   
+ 
+       $.each( data, function( key, val ) {
+ 
+       fhacktion = val.fhacktion
+         if(fhacktion==null){
+            fhacktion = "none";
+            }
+       
+                 var  marker2 = new PruneCluster.Marker(val.lat,val.lon, { tags: [val.fhacktion] });
+     marker2.data.popup = "<b>Server name: </b>" + val.name + "<br> <b>Server Type: </b>" + server_type + "<br><b>Fhacktion: </b>" + fhacktion;
+ 
+
+  
+
+       Cluster_premium_no_hacked.RegisterMarker(marker2);
+ 
+});
+premium_no_hacked.addLayer(Cluster_premium_no_hacked);
+
+
+
+});
+//FREE NO HACKED
+  $.ajax({
+    url : HOST+'/serversNoHacked',
+    dataType : 'json'
+})
+.done(function(data) {
+  
+
+  data_free =JSONH.parse(JSON.stringify(data))
+   var id = "";
+   
+   var server_type="Normal";
+    
+        $.each( data_free, function( key, val ) {
+        
+           
+                 var  marker = new PruneCluster.Marker(val.a,val.o);
+     marker.data.popup = "<b>Server name: </b>" + val.n   ;
+
+      Cluster_serversNoHacked.RegisterMarker(marker);
+ 
+        });
+  
+
+free_no_hacked.addLayer(Cluster_serversNoHacked);
+ 
+
+
+});
+
+
+
+
+});
+
+    
+    function initmap() {
+    // set up the map
+        map = new L.Map('map');
+
+
+
+    // create the tile layer with correct attribution
+    var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+    var osm = new L.TileLayer(osmUrl, {minZoom: 10, maxZoom: 20, attribution: osmAttrib});      
+
+    // start the map in South-East England
+    map.setView(new L.LatLng(51.3, 0.7),9);
+    map.addLayer(osm);
+
+}
+function destroy(obj) {
+    for(var prop in obj){
+        var property = obj[prop];
+        if(property != null && typeof(property) == 'object') {
+            destroy(property);
+        }
+        else {
+            obj[prop] = null;
+        }
+    }
+}
+
+function addPruneDataHacked(){
+      var fhacktion;
+           var server_type="Normal";
+    pruneCluster_hacked = null;
+   var id= "";
+    pruneCluster_hacked = new PruneClusterForLeaflet();
+     var Fhacktion_list= [];
+       $.each( prune_data, function( key, val ) {
+
+        if(val.serv_premium==true){
+            server_type="Premium";
+           
+        }else{
+             server_type="Normal";
+        }
+
+        fhacktion = val.fhacktion
+             if(fhacktion==null){
+            fhacktion = "none";
+            }
+   
+
+      var  marker = new PruneCluster.Marker(val.lat,val.lon, { tags: [val.fhacktion] });
+     marker.data.popup = "<b>Server name: </b>" + val.name + "<br> <b>Server Type: </b>" + server_type + "<br><b>Fhacktion: </b>" + fhacktion;
+
+  
+    if(val.fhacktion!=null && !Fhacktion_list.includes(val.fhacktion)){
+       
+   Fhacktion_list.push(val.fhacktion);
+      //  console.log( val.name );
+    }
+    
+    pruneCluster_hacked.RegisterMarker(marker);
+    });
+
+all_hacked.addLayer(pruneCluster_hacked);
+
+         L.control.tagFilterButton({
+                     data:  Fhacktion_list,
+                     filterOnEveryClick: true
+                      }).addTo( map ).enablePruneCluster(pruneCluster_hacked);
+}
+
+
+function addPruneDataPremium(){
+      var fhacktion;
+           var server_type="Premium";
+   
+   
+    pruneCluster_premium = new PruneClusterForLeaflet();
+      premium_list= [];
+       $.each( prune_data, function( key, val ) {
+ if(val.serv_premium==true){
+       fhacktion = val.fhacktion
+             if(fhacktion==null){
+            fhacktion = "none";
+            }
+       
+                 var  marker2 = new PruneCluster.Marker(val.lat,val.lon, { tags: [val.fhacktion] });
+     marker2.data.popup = "<b>Server name: </b>" + val.name + "<br> <b>Server Type: </b>" + server_type + "<br><b>Fhacktion: </b>" + fhacktion;
+ 
+
+  if(val.fhacktion!=null && !premium_list.includes(val.fhacktion)){
+        premium_list.push(val.fhacktion);
+       }
+
+       pruneCluster_premium.RegisterMarker(marker2);
+ }
+});
+
+cluster_premium.addLayer(pruneCluster_premium);
+
+         L.control.tagFilterButton({
+                     data:  premium_list,
+                     filterOnEveryClick: true
+                      }).addTo( map ).enablePruneCluster(pruneCluster_premium);
+}
+
+function addPruneDataFree(){
+     var fhacktion;
+           var server_type="Normal";
+   
+   
+    pruneCluster_free = new PruneClusterForLeaflet();
+   free_list= [];
+       $.each( prune_data, function( key, val ) {
+ if(val.serv_premium==false){
+       fhacktion = val.fhacktion
+         if(fhacktion==null){
+            fhacktion = "none";
+            }
+       
+                 var  marker2 = new PruneCluster.Marker(val.lat,val.lon, { tags: [val.fhacktion] });
+     marker2.data.popup = "<b>Server name: </b>" + val.name +"<br> <b>Server Type: </b>" + server_type + "<br><b>Fhacktion: </b>" + fhacktion;
+ 
+
+  if(val.fhacktion!=null && !free_list.includes(val.fhacktion)){
+        free_list.push(val.fhacktion);
+       }
+
+       pruneCluster_free.RegisterMarker(marker2);
+ }
+});
+cluster_free.addLayer(pruneCluster_free);
+
+         L.control.tagFilterButton({
+                     data:  free_list,
+                     filterOnEveryClick: true
+                      }).addTo( map ).enablePruneCluster(pruneCluster_free);
+}
+
+function addPruneDataAll(){
+     var fhacktion;
+           var server_type="Normal";
+            var id = "";
+   
+    pruneCluster_All = new PruneClusterForLeaflet();
+   var list_All= [];
+   if(prune_data!=null){
+       $.each( prune_data, function( key, val ) {
+
+       fhacktion = val.fhacktion
+         if(fhacktion==null){
+            fhacktion = "none";
+            }
+            if(val.serv_premium==true){
+            server_type = "Premium";
+            }else{
+            server_type="Normal";
+            }
+           
+       
+                 var  marker2 = new PruneCluster.Marker(val.lat,val.lon, { tags: [val.fhacktion] });
+     marker2.data.popup = "<b>Server name: </b>" + val.name +"<br> <b>Server Type: </b>" + server_type + "<br><b>Fhacktion: </b>" + fhacktion;
+ 
+
+       pruneCluster_All.RegisterMarker(marker2);
+
+});
+   }
+if(data_free!=null){
+    $.each( data_free, function( key, val ) {
+   fhacktion = val.fhacktion
+         if(fhacktion==null){
+            fhacktion = "none";
+            }
+             if(val.serv_premium==true){
+            server_type = "Premium";
+            }else{
+            server_type="Normal";
+            }
+            
+             var  marker = new PruneCluster.Marker(val.lat,val.lon);
+ marker.data.popup =  "<b>Server name: </b>" + val.name + "<br> <b>Server Type: </b>" + server_type + "<br><b>Fhacktion: </b>" + fhacktion;
+
+
+  pruneCluster_All.RegisterMarker(marker);
+
+    });
+
+group_all.addLayer(pruneCluster_All);
+
+}
+
+      
+}
+
+function addPruneDataUser(){
+    //USER CREATED OR NOT
+    var fhacktion;
+           var server_type="Normal";
+            var id = "";
+   
+    cluster_userCreated = new PruneClusterForLeaflet();
+   var list_All= [];
+    if(prune_data!=null){
+     $.each( prune_data, function( key, val ) {
+          fhacktion = val.fhacktion
+    if(fhacktion==null){
+            fhacktion = "none";
+            }
+  
+if(val.serv_owner!=null){
+ var  marker_user = new PruneCluster.Marker(val.lat,val.lon);
+ marker_user.data.popup =  "<b>Server name: </b>" + val.name +"<br> <b>Server Type: </b>" + server_type + "<br><b>Fhacktion: </b>" + fhacktion;
+
+cluster_userCreated.RegisterMarker(marker_user);
+}
+});
+
+}
+
+if(data_free!=null){
+    $.each( data_free, function( key, val ) {
+        if(val.serv_owner!=null){
+   fhacktion = val.fhacktion
+         if(fhacktion==null){
+            fhacktion = "none";
+            }
+             if(val.serv_premium==true){
+            server_type = "Premium";
+            }else{
+            server_type="Normal";
+            }
+            
+             var  marker = new PruneCluster.Marker(val.lat,val.lon);
+ marker.data.popup =  "<b>Server name: </b>" + val.name +"<br> <b>Server Type: </b>" + server_type + "<br><b>Fhacktion: </b>" + fhacktion;
+
+
+  cluster_userCreated.RegisterMarker(marker);
+}
+    });
+
+
+group_user_created.addLayer(cluster_userCreated);
+}
+
+
+}
+function addPruneDataNoUsers(){
+    //USER CREATED OR NOT
+    var fhacktion;
+           var server_type="Normal";
+            var id= "";
+   
+    cluster_userNoCreated = new PruneClusterForLeaflet();
+   var list_All= [];
+    if(prune_data!=null){
+     $.each( prune_data, function( key, val ) {
+          fhacktion = val.fhacktion
+    if(fhacktion==null){
+            fhacktion = "none";
+            }
+    
+if(val.serv_owner==null){
+ var  marker_user = new PruneCluster.Marker(val.lat,val.lon);
+ marker_user.data.popup =  "<b>Server name: </b>" + val.name +"<br> <b>Server Type: </b>" + server_type + "<br><b>Fhacktion: </b>" + fhacktion;
+
+cluster_userNoCreated.RegisterMarker(marker_user);
+}
+});
+
+}
+
+if(data_free!=null){
+    $.each( data_free, function( key, val ) {
+        if(val.serv_owner==null){
+   fhacktion = val.fhacktion
+         if(fhacktion==null){
+            fhacktion = "none";
+            }
+             if(val.serv_premium==true){
+            server_type = "Premium";
+            }else{
+            server_type="Normal";
+            }
+            
+             var  marker = new PruneCluster.Marker(val.lat,val.lon);
+ marker.data.popup =  "<b>Server name: </b>" + val.name +"<br> <b>Server Type: </b>" + server_type + "<br><b>Fhacktion: </b>" + fhacktion;
+
+
+  cluster_userNoCreated.RegisterMarker(marker);
+}
+    });
+
+
+group_user_no_created.addLayer(cluster_userNoCreated);
+}
+
+
+}
+
+
+
+  function unCheckRadioButton(name){
+var ele = document.getElementsByName(name);
+   for(var i=0;i<ele.length;i++)
+      ele[i].checked = false;
+  }
+   function checkRadioButton(name){
+var ele = document.getElementsByName(name);
+   //for(var i=0;i<ele.length;i++)
+      ele[1].checked = true;
+  }
+
+   //CURRENT LOCATION
+map.addControl(L.control.locate({
+       locateOptions: {
+               maxZoom: 17
+}}));
+//PAINT
+
+   // map.MapPaint.enable();
+map.addControl(new MapPaint.SwitchControl());
+
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+{% extends 'master.html' %}
+{% block body %}
+
+	<div class="container">
+		<div id="user-index" class="page">   	
+			{% if session['userRole'] == 'A' %}
+			<div id="btn-group-create-user" class="botonera">
+				<div class="row">
+					<div class="col-xs-12">
+						<a id="btn-create-user" class="btn btn-default" href="/sign_up" role="button"><i class="fa fa-plus-circle"></i> Crear nuevo usuario</a>
+						<!--<a id="edit-user-imprenta" class="btn btn-primary disabled" href="#" role="button"><i class="fa fa-edit"></i> Editar</a>
+						<a id="delete-user-imprenta" class="btn btn-danger disabled" href="#" role="button"><i class="fa fa-trash-o"></i> Eliminar</a>-->
+					</div>
+				</div>
+			</div>
+			{% endif %}
+			<div id="users-list">
+				<h2>Lista de usuarios</h2>
+				<table class="table table-hover dataTable">
+				    <thead class="thead">
+				      <tr>
+				        <!--<th></th>-->
+				        <th>Nombre</th>
+				        <th>Apellido</th>
+				        <th>Usuario</th>
+				        <th>Teléfono</th>
+				        <th>Correo</th>
+				        <th>Fecha creación</th>
+				        <th>Fecha nacimiento</th>
+				        <th>Role</th>
+				        <th>Activo</th>
+				        {% if session['userRole'] == 'A' %}
+				        <th></th>
+				        {% endif %}
+				      </tr>
+				    </thead>
+				    <tbody id="users-list-created">
+
+				    	{% for user in users %}
+						    <tr class="user">
+						    	<td class="user-name">{{user.name}}</td>
+						    	<td class="user-lastname">{{user.lastname}}</td>
+						    	<td class="user">{{user.user}}</td>
+						    	<td class="user-phone">{{user.phone}}</td>
+						    	<td class="user-email">{{user.mail}}</td>
+						    	<td class="user-creation">{{user.creationDate}}</td>
+						    	<td class="user-birthday">{{user.birthdate}}</td>
+						    	<td class="user-role">{{user.roleName}}</td>
+						    	{% if user.status == 1 %}
+								    <td class="user-status">Si</td>
+								{% else %}
+								    <td class="user-status">No</td>
+								{% endif %}
+								{% if session['userRole'] == 'A' %}
+								<td><a id="btn-edit-user{{user.id}}" class="btn btn-warning btn-edit-user" href="/user_edit?userId={{user.id}}" role="button">Editar</a></td>
+								{% endif %}
+						    </tr>
+						{% endfor %}
+				    </tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+
+
+{% endblock %}

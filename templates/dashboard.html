@@ -1,0 +1,358 @@
+{% extends 'master.html' %}
+
+{% block body %}
+
+	<div class="container-fluid">
+		<!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">
+                    Dashboard <small>Informe y estadísticas</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li class="active">
+                        <i class="fa fa-dashboard"></i> Dashboard
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        
+
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-orange">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-thermometer-half fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge">{{temperature}}°C</div>
+                                <div>Temperatura interior</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#">
+                        <div class="panel-footer">
+                            <!-- <span class="pull-left">View Details</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div> -->
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa glyphicon glyphicon-cloud fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge">{{humidity}}%</div>
+                                <div>Humedad</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#">
+                        <div class="panel-footer">
+                            <!-- <span class="pull-left">Ver Detalles</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div> -->
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-yellow">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-lightbulb-o fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge">{{currentExpense}} Gs</div>
+                                <div>Gasto actual</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#">
+                        <div class="panel-footer">
+                            <!-- <span class="pull-left">Ver Detalles</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div> -->
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div id="panel-alarm-status-dashboard" class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-exclamation-triangle fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div id="alarm-status-dashboard" class="huge" data-status="{{alarmStatus}}">
+                                    <input id=alarm-switch-dashboard type="checkbox" name="my-checkbox">
+                                </div>
+                                <div>Alarma</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#">
+                        <div class="panel-footer">
+                            <!-- <span class="pull-left">Ver Detalles</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div> -->
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- /.row -->
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-pie-chart fa-fw"></i> Gastos por áreas</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div id="alert-chart-area" class="alert alert-info hidden">
+                            <strong>Info:</strong> No hay gastos para el mes seleccionado.
+                        </div>
+                        <div class="row">
+                            <div id="container-pie-chart-area" class="col-md-12">
+                                <canvas id="chart-area"></canvas>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <select class="form-control" id="select-mes-area" name="select-mes-area">
+                                    <!-- <option value="0">Seleccione...</option> -->
+                                    <option value="1">Enero</option>
+                                    <option value="2">Febrero</option>
+                                    <option value="3">Marzo</option>
+                                    <option value="4">Abril</option>
+                                    <option value="5">Mayo</option>
+                                    <option value="6">Junio</option>
+                                    <option value="7">Julio</option>
+                                    <option value="8">Agosto</option>
+                                    <option value="9">Setiembre</option>
+                                    <option value="10">Octubre</option>
+                                    <option value="11">Noviembre</option>
+                                    <option value="12">Diciembre</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-pie-chart fa-fw"></i> Gastos por dispositivos</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div id="alert-chart-appliance" class="alert alert-info hidden">
+                            <strong>Info:</strong> No hay gastos para el mes seleccionado.
+                        </div>
+                        <div class="row">
+                            <div id="container-pie-chart-appliance" class="col-md-12">
+                                <canvas id="chart-appliance"></canvas>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <select class="form-control" id="select-mes-appliance" name="select-mes-appliance">
+                                    <!-- <option value="0">Seleccione...</option> -->
+                                    <option value="1">Enero</option>
+                                    <option value="2">Febrero</option>
+                                    <option value="3">Marzo</option>
+                                    <option value="4">Abril</option>
+                                    <option value="5">Mayo</option>
+                                    <option value="6">Junio</option>
+                                    <option value="7">Julio</option>
+                                    <option value="8">Agosto</option>
+                                    <option value="9">Setiembre</option>
+                                    <option value="10">Octubre</option>
+                                    <option value="11">Noviembre</option>
+                                    <option value="12">Diciembre</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-lightbulb-o"></i> Gasto Total</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form action="post" id="form-total-expense">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <div class="input-group date date-picker" id="fecha-desde-expense">
+                                            <input id="start_date" type='text' class="form-control" placeholder="Fecha desde" name="start_date"/>
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <div class="input-group date date-picker" id="fecha-hasta-expense">
+                                            <input id="end_date" type='text' class="form-control" placeholder="Fecha hasta" name="end_date"/>
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label class="col-md-offset-4 col-md-1 control-label label-align" for="categoria-expense">Categoría</label>
+                                        <div class="col-md-3">
+                                            <select class="form-control" id="category-expense" name="category_expense">
+                                                <option value="0">Todo</option>
+                                                <option value="1">Area</option>
+                                                <option value="2">Dispositivo</option>
+                                             </select>
+                                        </div>
+                                    
+                                        <div id="area-group-dashboard-expense" class="hidden">
+                                            <label class="col-md-1 control-label label-align" for="area-total-expense">Áreas</label>
+                                            <div class="col-md-3">
+                                                 <select class="form-control" id="area-total-expense" name="area_id">
+                                                    <option value="0">Seleccione...</option>
+                                                    {% for area in areas %}
+                                                    <option value={{area.id}}>{{area.name}}</option>
+                                                    {% endfor %}
+                                                 </select>
+                                            </div>
+                                        </div>
+
+                                        <div id="appliance-group-dashboard-expense" class="hidden">
+                                            <label class="col-md-1 control-label label-align" for="appliance-total-expense">Dispositivos</label>
+                                            <div class="col-md-3">
+                                                <select class="form-control" id="appliance-total-expense" name="appliance_id">
+                                                    <option value="0">Seleccione...</option>
+                                                    {% for appliance in appliances %}
+                                                    <option value={{appliance.id}}>{{appliance.name}}</option>
+                                                    {% endfor %}
+                                                 </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div id="alert-total-expense" class="col-md-5 alert alert-danger alert-dismissable hidden">
+                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="well well-sm">Gasto: <span id="total-expense"><span/></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1 col-md-offset-11">
+                                    <a id="query-total-expense" class="btn btn-primary" href="#" type="button"><i class="fa fa-search"></i> Consultar</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+        <!-- /.row -->
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-line-chart"></i> Gastos totales por año</h3>
+                    </div>
+                    <div class="panel-body">
+                        <!-- <div id="alert-chart-line" class="alert alert-info hidden">
+                            <strong>Info:</strong> No hay gastos para el año seleccionado.
+                        </div> -->
+                        <div class="row">
+                            <div id="container-line-chart" class="col-md-12">
+                                <canvas id="line-chart"></canvas>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <select class="form-control" id="select-year-line" name="select-year-line">
+                                    <!-- <option value="0">Seleccione...</option> -->
+                                    <option value="2017">2017</option>
+                                    <option value="2018">2018</option>
+                                    <option value="2019">2019</option>
+                                    <option value="2020">2020</option>
+                                    <option value="2021">2021</option>
+                                    <option value="2022">2022</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2026">2026</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-table"></i> Gastos totales por año</h3>
+                    </div>
+                    <div class="panel-body">
+                        <!-- <div id="alert-chart-line" class="alert alert-info hidden">
+                            <strong>Info:</strong> No hay gastos para el año seleccionado.
+                        </div> -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table id=table-total-expenses class="table table-hover">
+                                    <thead class="thead">
+                                        <tr>
+                                            <!--<th></th>-->
+                                            <th>Area</th>
+                                            <th>Dispositivo</th>
+                                            <th>Fecha encendido</th>
+                                            <th>Fecha apagado</th>
+                                            <th>Duración</th>
+                                            <th>Gasto</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id=table-total-expenses-list>
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</div>
+
+
+{% endblock %}

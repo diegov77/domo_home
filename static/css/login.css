@@ -1,0 +1,40 @@
+/* ==========================================================================
+   Ingalca's custom styles
+   ========================================================================== */
+#login-wrapper {
+	text-align: left;
+	display: inline-block;
+	width: 470px;
+	background-color: #F5F5F5;
+	border: 1px solid #E3E3E3;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+	padding: 20px;
+	border-radius: 5px;
+}
+
+#login-error {
+	display: none;
+}
+
+#login-container h3 {
+	margin-top: 0;
+	padding-bottom: 10px;
+	border-bottom: 2px solid #E5E5E5;
+}
+
+#login-form input[type="text"], #login-form input[type="password"] {
+	width: 270px;
+}
+
+.logo {
+	height: 50px;
+}
+
+
+
+
+
+
+
+
+

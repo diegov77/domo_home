@@ -1,0 +1,287 @@
+{% extends 'master.html' %}
+
+{% block body %}
+
+	<div class="container-fluid">
+		{% if session['userRole'] == 'A' or session['userRole'] == 'F' %}
+		<div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><i class="fa fa-tasks"></i> Programación de tareas</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form action="post" id="form-new-task">
+                            <div class="row">
+                            	<div class="col-md-2">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                    		<input id="name_task" type='text' class="form-control" placeholder="Nombre de la tarea" name="name"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                	<div class="form-group">
+                                		<div id="area-group-task" class="">
+                                            <label class="col-md-1 control-label label-align" for="action-task">Acción</label>
+                                            <div class="col-md-3">
+                                                 <select class="form-control" id="action-task" name="action">
+                                                    <option value="1">Encendido</option>
+                                                    <option value="0">Apagado</option>
+                                                 </select>
+                                            </div>
+                                        </div>
+                                	</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <div class="input-group date time-picker" id="task-timepicker">
+                                            <input id="time-task" type='text' class="form-control" placeholder="Hora" name="time-task"/>
+                                            <span class="input-group-addon">
+						                        <span class="glyphicon glyphicon-time"></span>
+						                    </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="col-md-2">
+                                    <div class="form-group">
+                                        <div class="input-group date time-picker" id="end-task-timepicker">
+                                            <input id="end-time-task" type='text' class="form-control" placeholder="Hasta" name="end-time-task"/>
+                                            <span class="input-group-addon">
+						                        <span class="glyphicon glyphicon-time"></span>
+						                    </span>
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <div id="area-group-task" class="">
+                                            <label class="col-md-1 control-label label-align" for="area-task">Área</label>
+                                            <div class="col-md-3">
+                                                 <select class="form-control" id="area-task" name="area-id">
+                                                    <option value="0">Seleccione...</option>
+                                                    {% for area in areas %}
+                                                    <option value={{area.id}}>{{area.name}}</option>
+                                                    {% endfor %}
+                                                 </select>
+                                            </div>
+                                        </div>
+
+                                        <div id="appliance-group-task" class="">
+                                            <label class="col-md-1 control-label label-align" for="appliance-total-expense">Dispositivo</label>
+                                            <div class="col-md-3">
+                                                <select class="form-control" id="appliance-taks" name="appliance-id">
+                                                    <option value="0">Seleccione...</option>
+                                                 </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div id="alert-new-task-danger" class="col-md-5 alert alert-danger alert-dismissable hidden">
+                                    No se pudo guardar la tarea.
+                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                </div>
+                                <div id="alert-new-task-success" class="col-md-5 alert alert-success alert-dismissable hidden">
+                                    Tarea guardada exitosamente.
+                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-1 col-md-offset-11">
+                                    <a id="save-new-task" class="btn btn-primary" href="#" type="button"><i class="fa fa-floppy-o"></i> Guardar</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+		{% endif %}
+
+		<div class="row">
+            <div id="alert-edit-task-danger" class="col-md-5 alert alert-danger alert-dismissable hidden">
+                No se pudo cambiar el estado la tarea.
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            </div>
+            <div id="alert-edit-task-success" class="col-md-5 alert alert-success alert-dismissable hidden">
+                Estado de la tarea cambiado exitosamente.
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            </div>
+        </div>
+
+		<div id="tasks-list">
+			<h2>Lista de Tareas</h2>
+			<table class="table table-hover dataTable">
+			    <thead class="thead">
+			      <tr>
+			        <th>Nombre</th>
+			        <!-- <th>Descripción</th> -->
+			        <th>Fecha creación</th>
+			        <th>Hora</th>
+			        <th>Activo</th>
+			        <th>Área</th>
+			        <th>Dispositivo</th>
+			        
+			        <th></th>
+			        
+			      </tr>
+			    </thead>
+			    <tbody id="task-list">
+
+			    </tbody>
+			</table>
+		</div>
+	</div>
+
+
+	<script>
+		function taskListHandler(data) {
+			var $tbody = $('#task-list');
+			$tbody.empty();
+			for (var i = 0; i < data.length; i++) {
+				var $tr = $('<tr class="task-row"></tr>');
+				// $tr.append('<td class="task-name">' + data[i].name + '</td>');
+				$tr.append('<td class="task-description">' + data[i].description + '</td>');
+				$tr.append('<td class="task-creatio-date">' + data[i].creationDate + '</td>');
+				$tr.append('<td class="taks-time">' + data[i].time + '</td>');
+				if (data[i].status == 1) {
+					$tr.append('<td class="task-status">Si</td>');
+				}
+				else {
+					$tr.append('<td class="task-status">No</td>');
+				}
+				$tr.append('<td class="taks-area">' + data[i].area + '</td>');
+				$tr.append('<td class="taks-appliance">' + data[i].appliance + '</td>');
+				if (data[i].validRole == true) {
+					if (data[i].status == 1) {
+						console.log("Desactivar");
+						$tr.append('<td><button id="btn-edit-task-status' + data[i].id + '" class="btn btn-warning btn-edit-task-status" data-status="' + data[i].status  + '" data-id="' + data[i].id + '" onclick="editStatusTask(0, ' + data[i].id + ')">Desactivar</button></td>');
+					}
+					else {
+						console.log("Desactivar");
+						$tr.append('<td><button id="btn-edit-task-status' + data[i].id + '" class="btn btn-warning btn-edit-task-status" data-status="' + data[i].status  + '" data-id="' + data[i].id + '" onclick="editStatusTask(1, ' + data[i].id + ')">Activar</button></td>');
+					}
+					
+				}
+				$tbody.append($tr);
+			}
+		}
+
+		function getTaskList() {
+			console.log("task-list");
+			$.ajax({
+		        url: "task_list",
+		        type: 'get',
+		        dataType: 'json',
+		    }).done(function (response) {
+		        if (response.length !== 0) {
+		        	taskListHandler(response);
+		        }
+		        else {
+		        	console.log("error");
+		        }
+		    });	
+		}
+
+		function submitTask() {
+			$.ajax({
+		        url: 'task_create',
+		        /*url: 'http://192.168.1.50:5000/submit_area',*/
+		        type: 'post',
+		        dataType: 'json',
+		        data: $("#form-new-task").serialize(),
+		        success: function (response) {
+		                console.log(data);
+		                if(response.status === "success") {
+		                    // do something with response.message or whatever other data on success
+		                    //url = "dashboard"; //cambiar ruta por users; vista que lista usuarios creados.
+		                       // $( location ).attr("href", url);
+                                    getTaskList();
+		                } else if(response.status === "error") {
+		                    // do something with response.message or whatever other data on error. Redirigir a pantalla de eror en caso de error.
+		                }
+		            }
+		    }).done(function (response) {
+		    	console.log(response);
+		        if (response.status === 1) {
+		            // var url = "http://0.0.0.0:5000/task_index";
+		            // $( location ).attr("href", url);
+		            $('#alert-new-task-success').removeClass('hidden');
+		        } else {
+		        	$('#alert-new-task-danger').removeClass('hidden');
+		            // $('#respuesta').html(response.message);
+		        }
+		    });
+		}
+
+		function editStatusTask(status, taskId) {
+		    // var status = $('#');
+		    // var taskId = ;
+		    var dataStatus = {
+		    	id: taskId,
+		    	status: status
+		    };
+			$.ajax({
+		        url: 'task_edit',
+		        /*url: 'http://192.168.1.50:5000/submit_area',*/
+		        type: 'post',
+		        dataType: 'json',
+		        data: dataStatus
+		        /*success: function (response) {
+		                console.log(data);
+		                if(response.status === "success") {
+		                    // do something with response.message or whatever other data on success
+		                    url = "http://192.168.1.55:5000/dashboard"; //cambiar ruta por users; vista que lista usuarios creados.
+		                        $( location ).attr("href", url);
+		                } else if(response.status === "error") {
+		                    // do something with response.message or whatever other data on error. Redirigir a pantalla de eror en caso de error.
+		                }
+		            }*/
+		    }).done(function (response) {
+		        if (response.status === 1) {
+		            // var url = "http://0.0.0.0:5000/task_index";
+		            // $( location ).attr("href", url);
+		            $('#alert-edit-task-success').removeClass('hidden');
+		        } else {
+		        	$('#alert-edit-task-danger').removeClass('hidden');
+		            // $('#respuesta').html(response.message);
+		        }
+		        getTaskList();
+		    });
+		}
+
+		$('#save-new-task').click(function () {
+			submitTask();
+			getTaskList();
+		});
+
+		// $('.btn-edit-task-status').click(function () {
+		// 	var $e = $(this);
+		// 	console.log("edit");
+		// 	var status = $e.data('status');
+		//     var taskId = $e.data('id');
+		//     editStatusTask(status, taskId);
+		// });
+
+		//function changeStatusTask(buttonId) {
+			// console.log(buttonId)
+			// var $e = $(buttonId);
+			// console.log("edit");
+			// var status = $e.data('status');
+		 //    var taskId = $e.data('id');
+		 //    editStatusTask(status, taskId);
+		//}
+
+
+
+		$('document').ready(function () {
+			$('#area-task').val(0);
+			getTaskList();
+		});
+	</script>
+{% endblock %}

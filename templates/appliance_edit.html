@@ -1,0 +1,106 @@
+
+{% extends 'master.html' %}
+
+{% block body %}
+
+		<div class="container">
+			<div id="appliance-register-form" class="panel panel-default">
+				<div class="panel-heading">
+					<h2>Editar dispositivo</h2>
+				</div>
+				<div class="container-form-register panel-body">
+					<br>
+					<form data-toggle="validator" id="form-appliance-edit" class="form-horizontal" role="form" method="POST">
+						<input id="id-edit-appliance-form" type="hidden" class="" name="appliance-id" value={{appliance.id}} data-id={{appliance.id}}>
+						<div class="form-group">
+							<label class="col-sm-3 control-label" for="name">Nombre*</label>
+							<div class="col-sm-5">
+								<input class="form-control" placeholder="Nombre del dispositivo" type="text" id="txt-name-appliance-form" name="name" required data-error="Definir el nombre." value="{{appliance.name}}">
+								<span class="help-block with-errors"></span>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label" for="power">Potencia*</label>
+							<div class="col-sm-5">
+								<input class="form-control" placeholder="Consumo en watts" type="text" id="txt-power-form" name="power" required data-error="Definir el consumo en watts." value={{appliance.power}}>
+								<span class="help-block with-errors"></span>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-xs-3 control-label" for="status">Estado*</label>
+							<div class="col-xs-2 radio">
+								<label>
+									<input class="" type="radio" id="txt-status-appliance-activo-form-edit" name="appliance-status-radio" value=1 {{ "checked" if appliance.status==1 }}>
+									<span>Activo</span>
+								</label>
+							</div>
+							<div class="col-xs-2 radio">
+								<label>
+									<input class="" type="radio" id="txt-status-appliance-inactive-form-edit" name="appliance-status-radio" value=0 {{ "checked" if appliance.status==0 }}>
+									<span>Inactivo</span>
+								</label>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label" for="area">Área*</label>
+							<div class="col-sm-5">
+								<select class="form-control" id="txt-area-appliance-form-edit" name="area" value={{appliance.areaId}}>
+									<option value="0">Seleccione área...</option>
+									{% for area in areas %}
+								    <option value={{area.id}} {% if appliance.areaId==area.id %} selected="selected"{% endif %}>{{area.name}}</option>
+								    {% endfor %}
+								 </select>
+								<span class="help-block with-errors"></span>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label" for="type-appliance">Tipo dispositivo*</label>
+							<div class="col-sm-5">
+								<select class="form-control" id="txt-type-appliance-form-edit" name="type-appliance">
+									<option value="0">Seleccione tipo dispositivo...</option>
+								    {% for type in appliance_types %}
+								    <option value={{type.id}} {% if appliance.typeId==type.id %} selected="selected"{% endif %}>{{type.name}}</option>
+								    {% endfor %}
+								 </select>
+								<span class="help-block with-errors"></span>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label" for="sensor">Sensor*</label>
+							<div class="col-sm-5">
+								<select class="form-control" id="txt-sensor-form-edit" name="sensor">
+									<option value="0">Seleccione el sensor...</option>
+								    {% for sensor in sensors %}
+								    <option value={{sensor.id}} {% if appliance.sensorId==sensor.id %} selected="selected"{% endif %}>{{sensor.name}}</option>
+								    {% endfor %}
+								 </select>
+								<span class="help-block with-errors"></span>
+							</div>
+						</div>
+					
+						<div class="form-group">
+							<label class="col-sm-3 control-label" for="description">Descripción</label>
+							<div class="col-sm-5">
+								<textarea class="form-control" placeholder="Agregue una descripción..." type="text" id="txt-description-form-edit" name="description" rows="3">{{appliance.description}}</textarea>
+							</div>
+						</div>
+
+						<div id="btn-save-appliance-form" class="form-group text-right">
+							<div id="btn-group-edit-appliance" class="col-sm-8">
+								<a id="save-form-appliance-edit" class="btn btn-primary" href="#" role="button"><i class="fa fa-save"></i> Guardar</a>
+								<a id="exit-form-appliance-edit" class="btn btn-default" href="/appliance_index" role="button">Salir</a>
+							</div>
+						</div>
+						<hr>
+						<h4>Los campos con * son obligatorios</h4>
+					</form>
+				</div>
+			</div>
+		</div>
+
+{% endblock %}

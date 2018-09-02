@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Domotica - Smart Home</title>
+    <meta name="description" content="">
+	<meta name="author" content="Domotca Tesis">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/css/bootstrap-datetimepicker.css">
+    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css">
+     <!-- Custom CSS -->
+    <link href="static/css/sb-admin.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="static/css/plugins/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="stylesheet" type="text/css" href="static/font-awesome/css/font-awesome.css">
+    <style>
+        body {
+            padding-top: 50px;
+            padding-bottom: 20px;
+        }
+    </style>
+    <!--link rel="stylesheet" href="css/bootstrap-theme.min.css"-->
+    <link rel="stylesheet" href="static/css/login.css">
+
+    <!--script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script-->
+</head>
+<body>
+
+	<div class="container" style="text-align: center" id="login-container">
+		<!--img src="img/logo.png" style="height: 150px;"/-->
+		<p><strong>Tesis</strong> - Sistema <strong>D</strong>ómotico <strong>P</strong>ara el <strong>H</strong>ogar</p>
+		<div class="clearfix"></div>
+		<div id="login-wrapper">
+			<h3>Entrar a la WebApp</h3>
+			<!--div id="login-error" class="alert alert-danger">
+				<a class="close" data-dismiss="alert" href="#">x</a>¡Nombre de usuario o contraseña incorrecta!
+			</div-->
+			<form role="form" method="POST" id="login-form">
+				<div class="form-group">
+					<label class="sr-only" for="username">Usuario</label>
+					<input class="form-control" placeholder="Usuario" type="text" id="username" name="user">
+				</div>
+				<div class="form-group">
+					<label class="sr-only" for="password">Password</label>
+					<input class="form-control" placeholder="Contraseña" type="password" id="password" name="pass">
+				</div>
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" id="remember" name="remember" value="1"> Recordarme
+					</label>
+				</div>
+				<button class="btn-info btn" id="login" type="button">Login</button>
+			</form>
+		</div>
+		<br>
+        <div class="row">
+            <div class="col-xs-7">
+                <div class="alert alert-danger alert-dismissable fade in hidden">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <span class="respuesta-error"></span>
+                </div>  
+            </div>
+        </div>
+	</div> <!-- /container -->
+	<script type="text/javascript">
+		 // <script>window.jQuery || document.write('<script src="static/js/jquery.js"><\/script>')</script>
+    <script src="https://code.jquery.com/jquery-3.2.1.js"
+              integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+              crossorigin="anonymous"></script>
+    <script src="static/js/moment.js"></script>
+    <script src="static/js/bootstrap.min.js"></script>
+    <script src="static/js/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js"></script>
+    <script src="//cdn.datatables.net/plug-ins/1.10.12/sorting/datetime-moment.js"></script>
+    <script src="static/js/ajax.js"></script>
+    <script src="static/js/login.js"></script>
+    <script src="static/js/sign-up.js"></script>
+    <script src="static/js/user_edit.js"></script>
+    <script src="static/js/appliance_create.js"></script>
+    <script src="static/js/appliance_edit.js"></script>
+    <script src="static/js/area_create.js"></script>
+    <script src="static/js/area_edit.js"></script>
+    
+    <script>
+        $(document).ready( function () {
+
+
+            //Para ordenar correctamente por fecha
+            $.fn.dataTable.moment('DD/MM/YYYY');
+
+            //plug-in para ordenamiento por fecha
+            $.fn.dataTable.moment = function (format, locale) {
+                var types = $.fn.dataTable.ext.type;
+
+                // Add type detection
+                types.detect.unshift(function (d) {
+                    return moment(d, format, locale, true).isValid() ?
+                        'moment-' + format :
+                        null;
+                });
+
+                // Add sorting method - use an integer for the sorting
+                types.order['moment-' + format + '-pre'] = function (d) {
+                    return moment(d, format, locale, true).unix();
+                };
+            };
+
+            //dataTable para tablas por fecha
+            $('.dataTable').DataTable({
+                "order": [0, 'desc'],
+                "language": {
+                    "sProcessing": "Procesando...",
+                    "sLengthMenu": "Mostrar _MENU_ registros",
+                    "sZeroRecords": "No se encontraron resultados",
+                    "sEmptyTable": "Ningún dato disponible en esta tabla",
+                    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix": "",
+                    "sSearch": "Buscar:",
+                    "sUrl": "",
+                    "sInfoThousands": ",",
+                    "sLoadingRecords": "Cargando...",
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                    }
+                }
+            });
+        });
+    </script>
+    <script src="static/js/user_index.js"></script>
+   
+
+  
+    <script src="static/js/plugins/morris/raphael.min.js"></script>
+    <script src="static/js/plugins/morris/morris.min.js"></script>
+    <script src="static/js/plugins/morris/morris-data.js"></script>
+		
+	</script>
+</body>
+</html>
+   
+
+  
+
+   
+
+
+
+
+
